@@ -60,7 +60,7 @@
     - name: Update Security Group with its own sg id
       amazon.aws.ec2_group:
         name: vproStack-sg
-        description: Security Group for EC2 stack
+        #description: Security Group for EC2 stack
         region: "{{ region }}"
         vpc_id: "{{ vpcid }}"
         purge_rules: no
