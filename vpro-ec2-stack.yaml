@@ -66,4 +66,89 @@
         rules:
           - proto: all
             group_id: "{{vproStackSG_out.group_id}}"
+
+    - name: Nginx EC2 Instance
+      amazon.aws.ec2_instance:
+        name: "web01"
+        image_id: "{{ nginx_ami }}"
+        instance_type: "t2.micro"
+        region: "{{ region }}"
+        vpc_subnet_id: "{{ privsub1id }}"
+        key_name: "loginkey_vpro"
+        security_group: "{{ vproStackSG_out.group_id }}"
+        wait: true
+        wait_timeout: 300
+        tags:
+          Name: "web01"
+          Project: "Vprofile"
+          Owner: "Devops Team"
+      register: web01_out
+
+    - name: Tomcat EC2 Instance
+      amazon.aws.ec2_instance:
+        name: "app01"
+        image_id: "{{ tomcat_ami }}"
+        instance_type: "t2.micro"
+        region: "{{ region }}"
+        vpc_subnet_id: "{{ privsub2id }}"
+        key_name: "loginkey_vpro"
+        security_group: "{{ vproStackSG_out.group_id }}"
+        wait: true
+        wait_timeout: 300
+        tags:
+          Name: "app01"
+          Project: "Vprofile"
+          Owner: "Devops Team"
+      register: app01_out
+
+    - name: Memcache EC2 Instance
+      amazon.aws.ec2_instance:
+        name: "mc01"
+        image_id: "{{ memcache_ami }}"
+        instance_type: "t2.micro"
+        region: "{{ region }}"
+        vpc_subnet_id: "{{ privsub3id }}"
+        key_name: "loginkey_vpro"
+        security_group: "{{ vproStackSG_out.group_id }}"
+        wait: true
+        wait_timeout: 300
+        tags:
+          Name: "mc01"
+          Project: "Vprofile"
+          Owner: "Devops Team"
+      register: mc01_out
+
+    - name: RabbitMQ EC2 Instance
+      amazon.aws.ec2_instance:
+        name: "rmq01"
+        image_id: "{{ rmq_ami }}"
+        instance_type: "t2.micro"
+        region: "{{ region }}"
+        vpc_subnet_id: "{{ privsub1id }}"
+        key_name: "loginkey_vpro"
+        security_group: "{{ vproStackSG_out.group_id }}"
+        wait: true
+        wait_timeout: 300
+        tags:
+          Name: "rmq01"
+          Project: "Vprofile"
+          Owner: "Devops Team"
+      register: rmq01_out
+
+    - name: MySQL EC2 Instance
+      amazon.aws.ec2_instance:
+        name: "db01"
+        image_id: "{{ mysql_ami }}"
+        instance_type: "t2.micro"
+        region: "{{ region }}"
+        vpc_subnet_id: "{{ privsub2id }}"
+        key_name: "loginkey_vpro"
+        security_group: "{{ vproStackSG_out.group_id }}"
+        wait: true
+        wait_timeout: 300
+        tags:
+          Name: "db01"
+          Project: "Vprofile"
+          Owner: "Devops Team"
+      register: db01_out
             
