@@ -54,6 +54,15 @@
             from_port: 22
             to_port: 22
             group_id: "{{ BastionSGid }}"
+
+    - name: Security Group for EC2 stack
+      amazon.aws.ec2_group:
+        name: vproStack-sg
+        description: Security Group for EC2 stack
+        region: "{{ region }}"
+        vpc_id: "{{ vpcid }}"
+        purge_rules: no
+        rules:
           - proto: all
             group_id: "{{vproStackSG_out.group_id}}"
-      register: vproStackSG_out
+            
