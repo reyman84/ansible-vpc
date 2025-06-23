@@ -23,3 +23,36 @@
         dest: "./loginkey_vpro.pem"
         mode: 0600
       when: vprokey_out.changed
+
+    - name: Security Group for Load Balancer
+      amazon.aws.ec2_group:
+        name: vproELB_sg
+        description: Security Group for Load Balancer
+        region: "{{ region }}"
+        vpc_id: "{{ vpcid }}"
+        purge_rules: no
+        rules:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
+      register: vproELBsg_out
+
+    - name: Security Group for EC2 stack
+      amazon.aws.ec2_group:
+        name: vproStack_sg
+        description: Security Group for EC2 stack
+        region: "{{ region }}"
+        vpc_id: "{{ vpcid }}"
+        purge_rules: no
+        rules:
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            group_id: "{{ vproELBsg_out.group_id }}"
+
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            group_id: "{{ BastionSGid }}"
+      register: vproStackSG_out

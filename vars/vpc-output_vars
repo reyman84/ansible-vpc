@@ -9,3 +9,4 @@ privsub3id: subnet-03c77e4b57ba488a0
 igwid: igw-013fd7481f76b0c1a
 pubRTid: rtb-0305ffdd541ba0931
 NATGWid: nat-03c0abaf1859ff21f
+BastionSG_out: 
