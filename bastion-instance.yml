@@ -20,7 +20,7 @@
       copy:
         content: "{{keyout.key.private_key}}"
         dest: "./bastion-key.pem"
-      mode: 0600
+        mode: 0600
       when: keyout.changed
 
     - name: Create security group for Bastion Host
