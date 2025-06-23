@@ -61,10 +61,10 @@
         region: "{{region}}"
         az: "{{zone1}}"
         state: "{{state}}"
-        cidr: "{{privSub1Cidr}}"
+        cidr: "{{PrivSub1Cidr}}"
         map_public: no
         resource_tags:
-          Name: Vprofile-PrivSub1
+          Name: Vprofile-privSub1
       register: privsub1_out
 
     - name: Create Private Subnet 2 in Zone2
