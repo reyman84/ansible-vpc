@@ -16,12 +16,12 @@
     - name: Create vprofile ec2 key
       ec2_key:
         name: vprokey
-        region: "{{region}}"
+        region: "{{ region }}"
       register: vprokey_out
 
     - name: Save private key into loginkey_vpro.pem
       copy:
-        content: "{{vprokey_out.key.private_key}}"
+        content: "{{ vprokey_out.key.private_key }}"
         dest: "./loginkey_vpro.pem"
         mode: 0600
       when: vprokey_out.changed
@@ -68,7 +68,7 @@
         purge_rules: no
         rules:
           - proto: all
-            group_id: "{{vproStackSG_out.group_id}}"
+            group_id: "{{ vproStackSG_out.group_id }}"
 
     - name: Nginx EC2 Instance
       amazon.aws.ec2_instance:

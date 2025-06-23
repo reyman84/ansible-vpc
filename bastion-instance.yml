@@ -8,17 +8,17 @@
       include_vars: vars/vpc_setup
     
     - name: Import VPC setup variable file
-      include_vars: vars/output_vars
+      include_vars: vars/vpc-output_vars
 
     - name: Create vprofile EC2 key
       ec2_key:
         name: vprofile-key
-        region: "{{region}}"
+        region: "{{ region }}"
       register: keyout
 
     - name: Save private key into bastion-key.pem
       copy:
-        content: "{{keyout.key.private_key}}"
+        content: "{{ keyout.key.private_key }}"
         dest: "./bastion-key.pem"
         mode: 0600
       when: keyout.changed
@@ -27,26 +27,26 @@
       ec2_group:
         name: Bastion-host-sg
         description: Allow port 22 from everywhere and all port within SG
-        region: "{{region}}"
-        vpc_id: "{{vpcid}}"
+        region: "{{ region }}"
+        vpc_id: "{{ vpcid }}"
         rules:
           - proto: tcp
             from_port: 22
             to_port: 22
-            cidr_ip: "{{MYIP}}"
+            cidr_ip: "{{ MYIP }}"
       register: BastionSG_out
 
     - name: Creating Bastion Host
       amazon.aws.ec2_instance:
         name: Bastion Host
-        region: "{{region}}"
+        region: "{{ region }}"
         instance_type: t2.micro
-        image_id: "{{bastion_ami}}"
+        image_id: "{{ bastion_ami }}"
         key_name: "vprofile-key"
         wait: yes
         wait_timeout: 300
-        security_group: "{{BastionSG_out.group_id}}"
-        vpc_subnet_id: "{{pubsub1id}}"
+        security_group: "{{ BastionSG_out.group_id }}"
+        vpc_subnet_id: "{{ pubsub1id }}"
         network:
           assign_public_ip: true
         tags:
@@ -61,4 +61,4 @@
         path: vars/vpc-output_vars
         backup: yes
         block: |
-          BastionSGid: {{BastionSG_out.group_id}}
+          BastionSGid: {{ BastionSG_out.group_id }}
