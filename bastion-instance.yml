@@ -38,14 +38,17 @@
 
     - name: Creating Bastion Host
       amazon.aws.ec2_instance:
-        name: vprofile-key
+        name: Bastion Host
         region: "{{region}}"
         instance_type: t2.micro
         image_id: "{{bastion_ami}}"
+        key_name: "vprofile-key"
         wait: yes
         wait_timeout: 300
-        group_id: "{{BastionSG_out.group_id}}"
+        security_group: "{{BastionSG_out.group_id}}"
         vpc_subnet_id: "{{pubsub1id}}"
+        network:
+          assign_public_ip: true
         tags:
           Name: "Bastion_Host"
           Project: "Vprofile"
