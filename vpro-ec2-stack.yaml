@@ -41,7 +41,6 @@
       ec2_group:
         name: vproStack-sg
         description: Allow port 80 from everywhere
-        state: absent
         region: "{{ region }}"
         vpc_id: "{{ vpcid }}"
         purge_rules: no               # Idempotent
@@ -61,7 +60,6 @@
       ec2_group:
         name: vproStack-sg
         description: Allow port 80 from everywhere
-        state: absent
         region: "{{ region }}"
         vpc_id: "{{ vpcid }}"
         purge_rules: no
