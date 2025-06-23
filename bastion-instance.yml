@@ -37,7 +37,7 @@
         register: BastionSG_out
 
     - name: Creating Bastion Host
-      ec2:
+      amazon.aws.ec2_instance:
         name: vprofile-key
         region: "{{region}}"
         instance_type: t2.micro
@@ -46,7 +46,7 @@
         wait_timeout: 300
         group_id: "{{BastionSG_out.group_id}}"
         vpc_subnet_id: "{{pubsub1id}}"
-        instance_tags:
+        tags:
           Name: "Bastion_Host"
           Project: "Vprofile"
           Owner: DevOps Team
