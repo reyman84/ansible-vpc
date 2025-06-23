@@ -4,7 +4,6 @@
   connection: local
   gather_facts: false
   tasks:
-
     - name: Import VPC setup variable
       include_vars: vars/vpc-output_vars
 
@@ -25,9 +24,9 @@
       when: vprokey_out.changed
 
     - name: Security Group for Load Balancer
-      amazon.aws.ec2_group:
-        name: vproELB_sg
-        description: Security Group for Load Balancer
+      ec2_group:
+        name: vproELB-sg
+        description: Allow port 80 from everywhere and all port with sg
         region: "{{ region }}"
         vpc_id: "{{ vpcid }}"
         purge_rules: no
@@ -36,29 +35,31 @@
             from_port: 80
             to_port: 80
             cidr_ip: 0.0.0.0/0
-      register: vproELBsg_out
+      register: vproELBSG_out
 
     - name: Security Group for EC2 stack
-      amazon.aws.ec2_group:
+      ec2_group:
         name: vproStack-sg
-        description: Security Group for EC2 stack
+        description: Allow port 80 from everywhere
         region: "{{ region }}"
         vpc_id: "{{ vpcid }}"
-        purge_rules: no
+        purge_rules: no               # Idempotent
         rules:
           - proto: tcp
             from_port: 80
             to_port: 80
-            group_id: "{{ vproELBsg_out.group_id }}"
+            group_id: "{{ vproELBSG_out.group_id }}"
+
           - proto: tcp
             from_port: 22
             to_port: 22
             group_id: "{{ BastionSGid }}"
+        register: vproStackSG_out
 
-    - name: Security Group for EC2 stack
-      amazon.aws.ec2_group:
+    - name: Update Security Group with its own sg id
+      ec2_group:
         name: vproStack-sg
-        description: Security Group for EC2 stack
+        description: Allow port 80 from everywhere
         region: "{{ region }}"
         vpc_id: "{{ vpcid }}"
         purge_rules: no
