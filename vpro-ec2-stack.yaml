@@ -160,7 +160,8 @@
         module: ec2_elb_lb
         name: "Vprofile-elb"
         region: "{{ region }}"
-        state: "{{ state }}"
+        state: absent
+        #state: "{{ state }}"
         instance_ids: "{{ web01_out.instance_ids }}"
         purge_instance_ids: true
         security_group_ids: "{{ vproELBSG_out.group_id }}"
