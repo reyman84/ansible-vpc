@@ -10,6 +10,9 @@
     - name: Import vprofile setup variable
       include_vars: vars/vprostacksetup
 
+    - name: Import other variables
+      include_vars: vars/vpc_setup
+
     - name: Create vprofile ec2 key
       ec2_key:
         name: vprokey
