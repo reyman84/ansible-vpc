@@ -223,10 +223,10 @@
 
           [stack_inst:children]
           websrvgrp
-          app01
-          rmq01
-          mc01
-          db01
+          appsrvgrp
+          rmqsrvgrp
+          mcsrvgrp
+          dbsrvgrp
 
           [stack_inst:vars]
           ansible_user=ubuntu
