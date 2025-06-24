@@ -1,6 +1,7 @@
+---
 - name: Install Memcache, Start & enable SVC
   hosts: mcsrvgrp
-  gather_facts: yes
+  gather_facts: no
   tasks:
     - name: Installing Memcache
       apt:
