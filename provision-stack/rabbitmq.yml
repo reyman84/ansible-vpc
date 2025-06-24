@@ -1,0 +1,75 @@
+---
+- name: Install & Setup RabbitMQ with user
+  hosts: rmqsrvgrp
+  gather_facts: yes
+  become: yes
+
+  tasks:
+    - name: Install required packages
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      loop:
+        - curl
+        - gnupg
+        - apt-transport-https
+
+    - name: Add RabbitMQ signing key
+      apt_key:
+        url: https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
+        state: present
+
+    - name: Add RabbitMQ and Erlang APT repository
+      copy:
+        dest: /etc/apt/sources.list.d/bintray.rabbitmq.list
+        content: |
+          deb https://dl.bintray.com/rabbitmq-erlang/debian bionic erlang
+          deb https://dl.bintray.com/rabbitmq/debian bionic main
+      notify: Update apt cache
+
+    - name: Install RabbitMQ Server
+      apt:
+        name: rabbitmq-server
+        state: present
+      tags: package
+
+    - name: Start and enable RabbitMQ service
+      service:
+        name: rabbitmq-server
+        state: started
+        enabled: yes
+
+    - name: Configure RabbitMQ to allow remote login (disable loopback restriction)
+      copy:
+        dest: /etc/rabbitmq/rabbitmq.config
+        content: |
+          [{rabbit, [{loopback_users, []}]}].
+      notify: Restart RMQ
+
+    - name: Create RabbitMQ admin user
+      rabbitmq_user:
+        user: test
+        password: test
+        configure_priv: .*
+        read_priv: .*
+        write_priv: .*
+        tags: administrator
+        state: present
+      notify: Restart RMQ
+
+    - name: Enable the RabbitMQ management plugin
+      rabbitmq_plugin:
+        names: rabbitmq_management
+        state: enabled
+      notify: Restart RMQ
+
+  handlers:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Restart RMQ
+      service:
+        name: rabbitmq-server
+        state: restarted
