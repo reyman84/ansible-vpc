@@ -17,6 +17,7 @@
       ec2_key:
         name: loginkey_vpro
         region: "{{ region }}"
+        state: "absent"
       register: loginkey_vpro_out
 
     - name: Save private key into loginkey_vpro.pem
@@ -73,6 +74,7 @@
     - name: Nginx EC2 Instance
       amazon.aws.ec2_instance:
         name: "web01"
+        state: "absent"
         image_id: "{{ nginx_ami }}"
         instance_type: "t2.micro"
         region: "{{ region }}"
@@ -90,6 +92,7 @@
     - name: Tomcat EC2 Instance
       amazon.aws.ec2_instance:
         name: "app01"
+        state: "absent"
         image_id: "{{ tomcat_ami }}"
         instance_type: "t2.micro"
         region: "{{ region }}"
@@ -107,6 +110,7 @@
     - name: Memcache EC2 Instance
       amazon.aws.ec2_instance:
         name: "mc01"
+        state: "absent"
         image_id: "{{ memcache_ami }}"
         instance_type: "t2.micro"
         region: "{{ region }}"
@@ -124,6 +128,7 @@
     - name: RabbitMQ EC2 Instance
       amazon.aws.ec2_instance:
         name: "rmq01"
+        state: "absent"
         image_id: "{{ rmq_ami }}"
         instance_type: "t2.micro"
         region: "{{ region }}"
@@ -141,6 +146,7 @@
     - name: MySQL EC2 Instance
       amazon.aws.ec2_instance:
         name: "db01"
+        state: "absent"
         image_id: "{{ mysql_ami }}"
         instance_type: "t2.micro"
         region: "{{ region }}"
