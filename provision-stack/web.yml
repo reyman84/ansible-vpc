@@ -1,0 +1,63 @@
+---
+- name: Setup Nginx Service and Deploy vproapp Site
+  hosts: websrvgrp
+  gather_facts: no
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+        cache_valid_time: 86400
+      tags:
+        - package
+
+    - name: Start and Enable Nginx Service
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+      tags:
+        - svc
+
+    - name: Disable Default Nginx Site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      tags:
+        - conf
+
+    - name: Deploy vproapp config to sites-available
+      template:
+        src: templates/nginxvpro.j2
+        dest: /etc/nginx/sites-available/vproapp
+        mode: '0644'
+      tags:
+        - conf
+      notify:
+        - Restart Nginx
+
+    - name: Enable vproapp site (create symlink)
+      file:
+        src: /etc/nginx/sites-available/vproapp
+        dest: /etc/nginx/sites-enabled/vproapp
+        state: link
+        force: yes
+      tags:
+        - conf
+      notify:
+        - Restart Nginx
+
+    - name: Test Nginx Configuration
+      command: nginx -t
+      register: nginx_test
+      changed_when: false
+      failed_when: nginx_test.rc != 0
+      tags:
+        - conf
+
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted
